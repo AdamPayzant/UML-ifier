@@ -12,9 +12,20 @@ This project only uses standard libraries, so just run:
 
 ## Usage
 
-To run this program, run the binary and give a path to the header files of a project. It currently will only load header files in the provided folder.
+To generate and umlify header files, run as:
 
-`umlify /path/to/header/files`
+`umlify "/path/to/header/files"`
+
+There are currently two additional options umlify can be run with.
+
+* -g : Only generates a UML file
+* -u : Skips UML file generation and modifies the header files. Requires a UML file to already be generated
+
+ex:
+
+`umlify -g "/path/to/header/files"`
+
+`umlify -u "/path/to/header/files"`
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
