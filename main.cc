@@ -1,3 +1,7 @@
+/*
+main.cc
+Developed by Adam Payzant 07/06/2020
+*/
 #include <iostream>
 
 #include "UMLifier.h"

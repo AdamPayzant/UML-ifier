@@ -1,3 +1,7 @@
+/*
+UMLifier.cc
+Developed by Adam Payzant 07/06/2020
+*/
 #include "UMLifier.h"
 
 UMLifier::UMLifier(std::string &d) {

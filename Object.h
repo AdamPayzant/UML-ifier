@@ -1,3 +1,9 @@
+/*
+Object.h
+Developed by Adam Payzant 07/06/2020
+
+Stores class information to generate a UML
+*/
 #ifndef OBJECT_H
 #define OBJECT_H
 

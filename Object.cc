@@ -1,3 +1,7 @@
+/*
+Object.cc
+Developed by Adam Payzant 07/06/2020
+*/
 #include "Object.h"
 
 Object::Object(std::string &n) {
