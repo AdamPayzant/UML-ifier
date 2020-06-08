@@ -16,14 +16,16 @@ class Object {
     public:
         Object(std::string &);
         ~Object();
-        void addDependent(Object *, int);
-        void setParent(Object *);
+        void addDependent(std::string &, int);
+        void setParent(std::string &);
         void addValue(std::string &);
+        void addFunction(std::string &);
     private:
         std::string name;
-        Object *parent;
-        std::map<Object *, int> dependents;
+        std::string parent;
+        std::map<std::string, int> dependents;
         std::vector<std::string> values;
+        std::vector<std::string> functions;
 };
 
 #endif

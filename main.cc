@@ -28,6 +28,7 @@ main(int argc, char **argv) {
 
         if(argv[1] == "-g") {
             umlifier->generate();
+            umlifier->save();
             std::cout << "Done";
             return;
         }

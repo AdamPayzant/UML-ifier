@@ -10,14 +10,19 @@ Can Generate or Load UML files and turn header files into UMLs for the project
 #include <vector>
 #include <thread>
 #include <dirent.h>
+#include <fstream>
 
 #include "Object.h"
+
+// Change if not using 4 space length tabs
+#define TABSIZE 4
 
 class UMLifier {
     public:
         UMLifier(std::string &);
         ~UMLifier();
         void generate();
+        void save();
         bool load();
         void umlify();
     private:

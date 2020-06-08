@@ -1,5 +1,6 @@
 .vscode/
 Tester.cc
+test.txt
 a.out
 *.o
 umlifier

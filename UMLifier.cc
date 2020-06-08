@@ -52,6 +52,60 @@ Generates class data from a header file then pushes it to the object vector
 */
 // TODO
 void UMLifier::generateOne(std::string &fileName) {
+    // The elements of an object
+    std::string name;
+    std::string parent;
+    std::vector<std::string> attributes;
+
+    std::ifstream file(path + fileName);
+
+    /*
+    This char is to denote an attributes visibility
+    0 - Not in class
+    '+' - In public
+    '#' - In protected
+    '-' - In private
+    */
+    char vis = 0;
+
+    std::string line;
+    while(getline(file, line)) {
+        if(vis > 0) {
+            if(line.find(':') != std::string::npos) {
+                if(line.at(TABSIZE+2) == 'b') vis = '+';
+                else if(line.at(TABSIZE+2) == 'o') vis = '#';
+                else if(line.at(TABSIZE+2) == 'i') vis = '-';
+            }
+            else {
+                line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
+                attributes.push_back(vis + " " + line);
+            }
+        }
+        else {
+            // Check if a class definition begins
+            if(line.substr(0, 5) == "class") {
+                vis = '+';
+                if(line.find(':') == std::string::npos) { // No Inheritance
+                    name = line.substr(6, line.length() - 8);
+                }
+                else { // TODO: Inheritance
+                    int col = line.find(':');
+                    name = line.substr(6, col - 7);
+                    parent = line.substr(col + 1, line.length() - col); // This line will not work
+                }
+            }
+        }
+    }
+    if(name != "") { // This is here in case someone uses something like a defs.h
+        // TODO
+        Object *obj = new Object(name);
+    }
+}
+
+/*
+Saves the UML file
+*/
+void UMLifier::save() {
 
 }
 
