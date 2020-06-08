@@ -29,7 +29,7 @@ ex:
 
 ## Current Shortcomings
 
-* Some UML class diagram specifications are broken or str to ensure headers will still operate normally (This is unlikely to be completely fixable)
+* Some UML class diagram specifications are broken or stretched to ensure headers will still operate normally (This is unlikely to be completely fixable)
 * Header files need to following the following specifications:
     - Only one class is defined
     - Only one parent
