@@ -24,6 +24,10 @@ class Object {
 
         std::string& getFileName();
         std::string& getClassName();
+        std::string& getParent();
+        std::vector<std::string>& getValues();
+        std::vector<std::string>& getFunctions();
+        std::map<std::string, int>& getDependents();
     private:
         std::string filename;
         std::string name;

@@ -59,3 +59,28 @@ void Object::addValue(std::string &val) {
 void Object::addFunction(std::string &func) {
     functions.push_back(func);
 }
+
+// Getters
+std::string& Object::getFileName() {
+    return(filename);
+}
+
+std::string& Object::getClassName() {
+    return(name);
+}
+
+std::string& Object::getParent() {
+    return(parent);
+}
+
+std::vector<std::string>& Object::getValues() {
+    return(values);
+}
+
+std::vector<std::string>& Object::getFunctions() {
+    return(functions);
+}
+
+std::map<std::string, int>& Object::getDependents() {
+    return(dependents);
+}
