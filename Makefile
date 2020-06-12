@@ -1,14 +1,17 @@
+CFLAGS = -fextended-indentifiers -Wall
+CC = g++
+
 umlify: main.o UMLify.o Object.o
-	g++ -o umlify main.o UMLify.o Object.o
+	$(CC) $(CFLAGS) -o umlify main.o UMLify.o Object.o
 
 main.o: main.cc UMLify.h
-	g++ -c main.cc
+	$(CC) $(CFLAGS) -c main.cc
 
 UMLify.o: UMLify.cc UMLify.h Object.o
-	g++ -c UMLify.cc
+	$(CC) $(CFLAGS) -c UMLify.cc
 
 Object.o: Object.cc Object.o
-	g++ -c Object.cc
+	$(CC) $(CFLAGS) -c Object.cc
 
 clean:
-	rm *.o
+	rm *.o umlify

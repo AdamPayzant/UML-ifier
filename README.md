@@ -6,7 +6,7 @@ A disgusting joke program to generate a UML class diagram from header files, the
 
 ## Requirements and Installation
 
-This project only uses standard libraries, so just run:
+This project only uses standard libraries. It should be comptable for all common C++. To compile, just run:
 
 `make all`
 
@@ -29,6 +29,7 @@ ex:
 
 ## Current Shortcomings
 
+* I can only find how to compile UTF code points, and not the characters in g++. Currently looking for a solution
 * Some UML class diagram specifications are broken or stretched to ensure headers will still operate normally (This is unlikely to be completely fixable)
 * Header files need to following the following specifications:
     - Only one class is defined
