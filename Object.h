@@ -14,13 +14,18 @@ Stores class information to generate a UML
 
 class Object {
     public:
-        Object(std::string &);
+        Object(std::string &, std::string &);
         ~Object();
+        void addDependent(std::string &);
         void addDependent(std::string &, int);
         void setParent(std::string &);
         void addValue(std::string &);
         void addFunction(std::string &);
+
+        std::string& getFileName();
+        std::string& getClassName();
     private:
+        std::string filename;
         std::string name;
         std::string parent;
         std::map<std::string, int> dependents;

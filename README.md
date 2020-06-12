@@ -32,7 +32,7 @@ ex:
 * Some UML class diagram specifications are broken or str to ensure headers will still operate normally (This is unlikely to be completely fixable)
 * Header files need to following the following specifications:
     - Only one class is defined
-    - Only one parent
+    - Only one parent is currently considered
     - All attributes must be declared on seperate lines
     - Functions and values cannot be defined in the header file
     - Header files must follow the format seen in this project's headers

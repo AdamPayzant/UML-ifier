@@ -6,6 +6,7 @@ Developed by Adam Payzant 07/06/2020
 
 UMLifier::UMLifier(std::string &p) {
     path = p;
+    loaded = false;
 }
 
 /*
@@ -50,7 +51,6 @@ void UMLifier::generate() {
 /*
 Generates class data from a header file then pushes it to the object vector
 */
-// TODO
 void UMLifier::generateOne(std::string &fileName) {
     // The elements of an object
     std::string name;
@@ -67,7 +67,7 @@ void UMLifier::generateOne(std::string &fileName) {
     '-' - In private
     */
     char vis = 0;
-
+    // This step should skip all the include/macro/etc statements
     std::string line;
     while(getline(file, line)) {
         if(vis > 0) {
@@ -78,7 +78,7 @@ void UMLifier::generateOne(std::string &fileName) {
             }
             else {
                 line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
-                attributes.push_back(vis + " " + line);
+                attributes.push_back(vis + line);
             }
         }
         else {
@@ -88,17 +88,70 @@ void UMLifier::generateOne(std::string &fileName) {
                 if(line.find(':') == std::string::npos) { // No Inheritance
                     name = line.substr(6, line.length() - 8);
                 }
-                else { // TODO: Inheritance
+                else {
                     int col = line.find(':');
                     name = line.substr(6, col - 7);
-                    parent = line.substr(col + 1, line.length() - col); // This line will not work
+                    parent = line.substr(col + 2, line.length() - col - 4);
                 }
             }
         }
     }
-    if(name != "") { // This is here in case someone uses something like a defs.h
-        // TODO
-        Object *obj = new Object(name);
+
+    // Second pass through, creating the actualy class object
+    if(!name.empty()) { // This is here in case of header files without class definitions
+        Object *obj = new Object(fileName, name);
+        if(!parent.empty()) {
+            obj->setParent(parent);
+        }
+
+        // A list of primatives (mostly) to reference against. Add to this if you want to consider other objects as attributes
+        std::unordered_set<std::string> prims = {"int", "char", "bool", "float", "double", "std::string"};
+        for(auto l = attributes.begin(); l != attributes.end(); ++l) {
+            std::string line = *l;
+            // Checks if the attribute is a function or not an onbject
+            if(prims.find(line.substr(1, line.find_first_of(" "))) != prims.end()) {
+                // Check if it's a function
+                if(line.find("(") != std::string::npos) {
+                    obj->addFunction(line);
+                }
+                else {
+                    obj->addValue(line);
+                }
+            }
+            // Not a primative
+            else {
+                // Add to this for it to consider additional container
+                std::unordered_set<std::string> containers = {"std::vector", "std::map", "std::set", "std::unordered_set"};
+                // Container object
+                if((line.find("[") != std::string::npos) || (containers.find(line.substr(1, line.find_first_of("<"))) != containers.end())) {
+                    int open = line.find("<"); int close = line.find(">");
+                    // Check if it's a function
+                    if(line.substr(close + 1, line.size() - close).find("(") != std::string::npos) {
+                        std::string temp = line.substr(open+1, close - open - 1);
+                        // Check if container is for primatives
+                        if(prims.find(temp) != prims.end()) {
+                            obj->addValue(line);
+                        }
+                        else {
+                            obj->addDependent(temp , -1);
+                        }
+                    }
+                    else {
+                        obj->addFunction(line);
+                    }
+                }
+                else {
+                    // Check if it's a function
+                    if(line.find("(") != std::string::npos) {
+                        obj->addFunction(line);
+                    }
+                    else {
+                        obj->addDependent(line);
+                    }
+                }
+            }
+        }
+        objects.push_back(obj);
     }
 }
 

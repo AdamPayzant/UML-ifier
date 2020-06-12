@@ -11,6 +11,7 @@ Can Generate or Load UML files and turn header files into UMLs for the project
 #include <thread>
 #include <dirent.h>
 #include <fstream>
+#include <unordered_set>
 
 #include "Object.h"
 
@@ -26,6 +27,7 @@ class UMLifier {
         bool load();
         void umlify();
     private:
+        bool loaded;
         void generateOne(std::string &);
         std::string path;
         std::vector<Object *> objects;

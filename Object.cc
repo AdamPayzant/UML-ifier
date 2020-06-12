@@ -4,7 +4,11 @@ Developed by Adam Payzant 07/06/2020
 */
 #include "Object.h"
 
-Object::Object(std::string &n) {
+/*
+Takes a filename and class name
+*/
+Object::Object(std::string &f, std::string &n) {
+    filename = f;
     name = n;
 }
 
@@ -16,10 +20,26 @@ Object::~Object() {
 }
 
 /*
+Adds a single object dependency. 
+-1 indicates infinite
+*/
+void Object::addDependent(std::string &depend) {
+    if(dependents[depend] == -1) return;
+    dependents[depend] += 1;
+}
+
+/*
 Adds an object dependency and the number of objects present
+-1 indicates infine occurances
 */
 void Object::addDependent(std::string &depend, int c) {
-    dependents.insert(std::pair<std::string, int>(depend, c));
+    if(dependents[depend] == -1) return;
+    if(c > 0) {
+        dependents[depend] += c;
+    }
+    else {
+        dependents[depend] = -1;
+    }
 }
 
 /*
