@@ -1,16 +1,16 @@
-CFLAGS = -fextended-indentifiers -Wall
+CFLAGS = -fextended-identifiers -Wall -std=c++0x -pthread
 CC = g++
 
-umlify: main.o UMLify.o Object.o
-	$(CC) $(CFLAGS) -o umlify main.o UMLify.o Object.o
+umlify: main.o UMLifier.o Object.o
+	$(CC) $(CFLAGS) -o umlify main.o UMLifier.o Object.o
 
-main.o: main.cc UMLify.h
+main.o: main.cc UMLifier.h
 	$(CC) $(CFLAGS) -c main.cc
 
-UMLify.o: UMLify.cc UMLify.h Object.o
-	$(CC) $(CFLAGS) -c UMLify.cc
+UMLifier.o: UMLifier.cc UMLifier.h Object.o
+	$(CC) $(CFLAGS) -c UMLifier.cc
 
-Object.o: Object.cc Object.o
+Object.o: Object.cc Object.h
 	$(CC) $(CFLAGS) -c Object.cc
 
 clean:

@@ -6,10 +6,14 @@ Developed by Adam Payzant 07/06/2020
 
 #include "UMLifier.h"
 
-main(int argc, char **argv) {
+// I know using namespaces has become somewhat frowned upon, but in this specific circumstance there should be no namespace collisions
+// I would also like to say this is the only file it's used
+using namespace std;
+
+int main(int argc, char **argv) {
     if(argc < 2) {
-        std::cout << "Please specify target directory" << std::endl;
-        return;
+        cout << "Please specify target directory" << endl;
+        return -1;
     }
 
     UMLifier *umlifier;
@@ -19,35 +23,35 @@ main(int argc, char **argv) {
         umlifier = new UMLifier(dir);
         umlifier->generate();
         umlifier->umlify();
-        std::cout<<"Done";
-        return;
+        cout << "Done" << endl;
+        return -1;
     }
     else if(argc == 3) {
-        std::string dir(argv[2]);
+        string dir(argv[2]);
         umlifier = new UMLifier(dir);
 
         if(argv[1] == "-g") {
             umlifier->generate();
             umlifier->save();
-            std::cout << "Done";
-            return;
+            cout << "Done" << endl;
+            return -1;
         }
         else if(argv[1] == "-u") {
             if(umlifier->load()) {
                 umlifier->umlify();
-                std::cout << "Done";
-                return;
+                cout << "Done" << endl;
+                return -1;
             }
-            std::cout << "valid UML file not found";
-            return;
+            cout << "valid UML file not found" << endl;
+            return -1;
         }
         else {
-            std::cout << "Unknown Argument" << std::endl;
-            return;
+            cout << "Unknown Argument" << endl;
+            return -1;
         }
     }
     else {
-        std::cout << "Too many arguments" << std::endl;
-        return;
+        cout << "Too many arguments" << endl;
+        return -1;
     }
 }

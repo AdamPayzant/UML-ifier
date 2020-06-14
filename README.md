@@ -29,7 +29,6 @@ ex:
 
 ## Current Shortcomings
 
-* I can only find how to compile UTF code points, and not the characters in g++. Currently looking for a solution
 * Some UML class diagram specifications are broken or stretched to ensure headers will still operate normally (This is unlikely to be completely fixable)
 * Header files need to following the following specifications:
     - Only one class is defined

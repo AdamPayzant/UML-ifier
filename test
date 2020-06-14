@@ -17,33 +17,34 @@ A drop in replacement header for Object that has been manually been UML-ified
 #define X ;
 #define Z {
 #define Y class
-#define X\u2795 public:
+#define X十 public:
 #define X\uFF03 protected:
-#define X\u2796 private:
+#define Xー private:
 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Y Object                                        Z
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X\u2795 Object(std::string &, std::string &)         X
-X\u2795 ~Object();                                   X
-X\u2795 void addDependent(std::string &)             X
-X\u2795 void setParent(std::string &)                X
-X\u2795 void addValue(std::string &)                 X
-X\u2795 void addFunction(std::string &)              X
-X\u2795 std::string& getFileName()                   X
-X\u2795 std::string& getClassName()                  X
-X\u2795 std::string& getParent()                     X
-X\u2795 std::vector<std::string>& getValues()        X
-X\u2795 std::vector<std::string>& getFunctions();    X
-X\u2795 std::map<std::string, int>& getDependents()  X
+X十 Object(std::string &, std::string &)        X
+X十 ~Object();                                  X
+X十 void addDependent(std::string &)            X
+X十 void addDependent(std::string&, int)        X
+X十 void setParent(std::string &)               X
+X十 void addValue(std::string &)                X
+X十 void addFunction(std::string &)             X
+X十 std::string& getFileName()                  X
+X十 std::string& getClassName()                 X
+X十 std::string& getParent()                    X
+X十 std::vector<std::string>& getValues()       X
+X十 std::vector<std::string>& getFunctions();   X
+X十 std::map<std::string, int>& getDependents() X
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X\u2796 std::string filename                         X
-X\u2796 std::string name                             X
-X\u2796 std::string parent                           X
-X\u2796 std::map<std::string, int> dependents        X
-X\u2796 std::vector<std::string> values              X
-X\u2796 std::vector<std::string> functions           X
+Xー std::string filename                        X
+Xー std::string name                            X
+Xー std::string parent                          X
+Xー std::map<std::string, int> dependents       X
+Xー std::vector<std::string> values             X
+Xー std::vector<std::string> functions          X
 HXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 /*

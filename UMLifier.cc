@@ -40,7 +40,8 @@ void UMLifier::generate() {
     }
     // Sends generation tasks off to other threads
     for(auto f = headers.begin(); f != headers.end(); ++f) {
-        threads.emplace_back(std::thread (generateOne, *f));
+        // generateOne(*f);
+        threads.emplace_back(std::thread (&UMLifier::generateOne, this, *f));
     }
     // Waits for all threads to finish
     for(auto& th : threads) {
@@ -51,7 +52,7 @@ void UMLifier::generate() {
 /*
 Generates class data from a header file then pushes it to the object vector
 */
-void UMLifier::generateOne(std::string &fileName) {
+void UMLifier::generateOne(std::string fileName) {
     // The elements of an object
     std::string name;
     std::string parent;
@@ -70,28 +71,30 @@ void UMLifier::generateOne(std::string &fileName) {
     // This step should skip all the include/macro/etc statements
     std::string line;
     while(getline(file, line)) {
-        if(vis > 0) {
-            if(line.find(':') != std::string::npos) {
-                if(line.at(TABSIZE+2) == 'b') vis = '+';
-                else if(line.at(TABSIZE+2) == 'o') vis = '#';
-                else if(line.at(TABSIZE+2) == 'i') vis = '-';
-            }
-            else {
-                line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
-                attributes.push_back(vis + line);
-            }
-        }
-        else {
-            // Check if a class definition begins
-            if(line.substr(0, 5) == "class") {
-                vis = '+';
-                if(line.find(':') == std::string::npos) { // No Inheritance
-                    name = line.substr(6, line.length() - 8);
+        if(line.length() == 0) {
+            if(vis > 0) {
+                if(line.find(':') != std::string::npos) {
+                    if(line.at(TABSIZE+2) == 'b') vis = '+';
+                    else if(line.at(TABSIZE+2) == 'o') vis = '#';
+                    else if(line.at(TABSIZE+2) == 'i') vis = '-';
                 }
                 else {
-                    int col = line.find(':');
-                    name = line.substr(6, col - 7);
-                    parent = line.substr(col + 2, line.length() - col - 4);
+                    line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
+                    attributes.push_back(vis + line);
+                }
+            }
+            else {
+                // Check if a class definition begins
+                if(line.substr(0, 5) == "class") {
+                    vis = '+';
+                    if(line.find(':') == std::string::npos) { // No Inheritance
+                        name = line.substr(6, line.length() - 8);
+                    }
+                    else {
+                        int col = line.find(':');
+                        name = line.substr(6, col - 7);
+                        parent = line.substr(col + 2, line.length() - col - 4);
+                    }
                 }
             }
         }
@@ -167,7 +170,7 @@ Loads in a UML file
 */
 // TODO
 bool UMLifier::load() {
-
+    return(false);
 }
 
 /*
