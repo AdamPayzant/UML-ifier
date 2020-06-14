@@ -1,7 +1,8 @@
 .vscode/
 Tester.cc
 test.txt
+test
 a.out
 *.o
-umlifier
+umlify
 testFiles
