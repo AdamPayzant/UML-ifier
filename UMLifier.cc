@@ -174,9 +174,28 @@ bool UMLifier::load() {
 }
 
 /*
-UMLifies the header files
+Controller function for UMLifying files
 */
 // TODO
 void UMLifier::umlify() {
+    // Make a backup of all the header files so they're at least preserved
+    std::string backup = path + "/copies";
+    if(mkdir(backup.c_str(), 0755) == -1) {
+        return;
+    }
+    std::system(("cp " + path + "/*.h " + path + "/copies").c_str());
+}
+
+/*
+UMLifies individual files
+*/
+void UMLifier::umlifyOne(std::string file) {
 
 }
+
+/*
+A function that genereates a complete UML of the 
+*/
+void UMLifier::testUMLify() {
+    
+};
