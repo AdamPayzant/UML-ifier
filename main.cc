@@ -24,7 +24,8 @@ int main(int argc, char **argv) {
         umlifier->generate();
         umlifier->umlify();
         cout << "Done" << endl;
-        return -1;
+        delete(umlifier);
+        return 0;
     }
     else if(argc == 3) {
         string dir(argv[2]);
@@ -34,13 +35,15 @@ int main(int argc, char **argv) {
             umlifier->generate();
             umlifier->save();
             cout << "Done" << endl;
-            return -1;
+            delete(umlifier);
+            return 0;
         }
         else if(argv[1] == "-u") {
             if(umlifier->load()) {
                 umlifier->umlify();
                 cout << "Done" << endl;
-                return -1;
+                delete(umlifier);
+                return 0;
             }
             cout << "valid UML file not found" << endl;
             return -1;

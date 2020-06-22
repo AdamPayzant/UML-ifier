@@ -38,15 +38,22 @@ void UMLifier::generate() {
             }
         }
     }
+    delete(entry);
+    free(dir);
     // Sends generation tasks off to other threads
     for(auto f = headers.begin(); f != headers.end(); ++f) {
-        // generateOne(*f);
+        //generateOne(*f);
         threads.emplace_back(std::thread (&UMLifier::generateOne, this, *f));
     }
     // Waits for all threads to finish
     for(auto& th : threads) {
         th.join();
     }
+
+/*     std::cout << "Printing" << std::endl;
+    for(auto it = objects.begin(); it != objects.end(); ++it) {
+        (*it)->print();
+    } */
 }
 
 /*
@@ -62,30 +69,38 @@ void UMLifier::generateOne(std::string fileName) {
 
     /*
     This char is to denote an attributes visibility
-    0 - Not in class
+    'n' - Not in class
     '+' - In public
     '#' - In protected
     '-' - In private
     */
-    char vis = 0;
+    char vis = 'n';
     // This step should skip all the include/macro/etc statements
     std::string line;
     while(getline(file, line)) {
-        if(line.length() == 0) {
-            if(vis > 0) {
-                if(line.find(':') != std::string::npos) {
+        if(line.length() > 0) {
+            if(vis != 'n') {
+                if(line == "};") {
+                    vis = 'n';
+                    break;
+                }
+                else if(line.find(":") != std::string::npos) {
                     if(line.at(TABSIZE+2) == 'b') vis = '+';
                     else if(line.at(TABSIZE+2) == 'o') vis = '#';
                     else if(line.at(TABSIZE+2) == 'i') vis = '-';
+                    else {
+                        line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
+                        attributes.push_back(vis + line.substr(0, line.length() -1));
+                    }
                 }
                 else {
                     line = line.substr(2 * TABSIZE, line.length() - 2 * TABSIZE);
-                    attributes.push_back(vis + line);
+                    attributes.push_back(vis + line.substr(0, line.length() - 1));
                 }
             }
             else {
                 // Check if a class definition begins
-                if(line.substr(0, 5) == "class") {
+                if(line.substr(0, 5) == (std::string) "class") {
                     vis = '+';
                     if(line.find(':') == std::string::npos) { // No Inheritance
                         name = line.substr(6, line.length() - 8);
@@ -108,11 +123,14 @@ void UMLifier::generateOne(std::string fileName) {
         }
 
         // A list of primatives (mostly) to reference against. Add to this if you want to consider other objects as attributes
-        std::unordered_set<std::string> prims = {"int", "char", "bool", "float", "double", "std::string"};
+        std::unordered_set<std::string> prims = {"int", "char", "bool", "float", "double", "string", "std::string"};
         for(auto l = attributes.begin(); l != attributes.end(); ++l) {
             std::string line = *l;
+            std::cout << line.substr(1, line.find_first_of(" ")) << std::endl;
+
             // Checks if the attribute is a function or not an onbject
             if(prims.find(line.substr(1, line.find_first_of(" "))) != prims.end()) {
+                std::cout << "Found primative" << std::endl;
                 // Check if it's a function
                 if(line.find("(") != std::string::npos) {
                     obj->addFunction(line);
@@ -161,6 +179,7 @@ void UMLifier::generateOne(std::string fileName) {
 /*
 Saves the UML file
 */
+// TODO
 void UMLifier::save() {
 
 }
@@ -176,7 +195,6 @@ bool UMLifier::load() {
 /*
 Controller function for UMLifying files
 */
-// TODO
 void UMLifier::umlify() {
     // Make a backup of all the header files so they're at least preserved
     std::string backup = path + "/copies";
@@ -184,18 +202,42 @@ void UMLifier::umlify() {
         return;
     }
     std::system(("cp " + path + "/*.h " + path + "/copies").c_str());
+
+    std::vector<std::thread> threads;
+    std::vector<std::string> headers;
+
+    // Loads a list of header files
+    struct dirent *entry;
+    DIR *dir = opendir(path.c_str());
+    if(dir == NULL) {
+        return;
+    }
+    while((entry = readdir(dir)) != NULL) {
+        if(entry->d_type == DT_REG) {
+            std::string name = entry->d_name;
+            if(name.substr(name.size() - 2, name.size() - 1) == ".h") {
+                headers.push_back(name);
+            }
+        }
+    }
+
+    // Sends generation tasks off to other threads
+    for(auto f = headers.begin(); f != headers.end(); ++f) {
+        threads.emplace_back(std::thread (&UMLifier::umlifyOne, this, *f));
+    }
+    // Waits for all threads to finish
+    for(auto& th : threads) {
+        th.join();
+    }
 }
 
 /*
 UMLifies individual files
 */
-void UMLifier::umlifyOne(std::string file) {
+// TODO
+void UMLifier::umlifyOne(std::string fileName) {
+    std::ifstream file(path + fileName);
 
+    struct cs::charset charset;
+    cs::setStandardChars(charset);
 }
-
-/*
-A function that genereates a complete UML of the 
-*/
-void UMLifier::testUMLify() {
-    
-};

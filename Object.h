@@ -12,11 +12,14 @@ Stores class information to generate a UML
 #include <map>
 #include <string>
 #include <utility>
+#include <iostream>
 
 class Object {
     public:
         Object(std::string &, std::string &);
         ~Object();
+        void print();
+
         void addDependent(std::string &);
         void addDependent(std::string &, int);
         void setParent(std::string &);

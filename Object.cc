@@ -16,7 +16,23 @@ Object::Object(std::string &f, std::string &n) {
 As it stands, Objects shouldn't have to worry about explicit deletions.
 */
 Object::~Object() {
+    
+}
 
+void Object::print() {
+    std::cout << "Name: " << name << std::endl;
+    std::cout << "File: " << filename << std::endl;
+    if(!parent.empty()) {
+        std::cout << "Parent: " << parent << std::endl;
+    }
+    std::cout << "Printing values: " << std::endl;
+    for(auto v = values.begin(); v != values.end(); ++v) {
+        std::cout << "  " << *v << std::endl;
+    }
+    std::cout << "Print dependents: " << std::endl;
+    for(auto d = dependents.begin(); d != dependents.end(); ++d) {
+        std::cout << "  " << d->first << ", " << d->second << std::endl;
+    }
 }
 
 /*

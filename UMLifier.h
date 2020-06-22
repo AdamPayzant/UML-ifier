@@ -31,7 +31,6 @@ class UMLifier {
         void save();
         bool load();
         void umlify();
-        void testUMLify();
     private:
         bool loaded;
         void generateOne(std::string);
