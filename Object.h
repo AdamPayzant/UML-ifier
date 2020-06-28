@@ -25,6 +25,7 @@ class Object {
         void setParent(std::string &);
         void addValue(std::string &);
         void addFunction(std::string &);
+        void addDependentLine(std::string &);
 
         std::string& getFileName();
         std::string& getClassName();
@@ -32,6 +33,7 @@ class Object {
         std::vector<std::string>& getValues();
         std::vector<std::string>& getFunctions();
         std::map<std::string, int>& getDependents();
+        std::vector<std::string>& getDependentLines();
     private:
         std::string filename;
         std::string name;
@@ -39,6 +41,7 @@ class Object {
         std::map<std::string, int> dependents;
         std::vector<std::string> values;
         std::vector<std::string> functions;
+        std::vector<std::string> dependentLines;
 };
 
 #endif

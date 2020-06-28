@@ -76,6 +76,10 @@ void Object::addFunction(std::string &func) {
     functions.push_back(func);
 }
 
+void Object::addDependentLine(std::string &line) {
+    dependentLines.push_back(line);
+}
+
 // Getters
 std::string& Object::getFileName() {
     return(filename);
@@ -99,4 +103,8 @@ std::vector<std::string>& Object::getFunctions() {
 
 std::map<std::string, int>& Object::getDependents() {
     return(dependents);
+}
+
+std::vector<std::string>&  Object::getDependentLines() {
+    return(dependentLines);
 }

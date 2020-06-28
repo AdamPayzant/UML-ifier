@@ -155,6 +155,7 @@ void UMLifier::generateOne(std::string fileName) {
                         }
                         else {
                             obj->addDependent(temp , -1);
+                            obj->addDependentLine(line);
                         }
                     }
                     else {
@@ -205,25 +206,14 @@ void UMLifier::umlify() {
 
     std::vector<std::thread> threads;
     std::vector<std::string> headers;
+    cs::charset *charset;
 
-    // Loads a list of header files
-    struct dirent *entry;
-    DIR *dir = opendir(path.c_str());
-    if(dir == NULL) {
-        return;
-    }
-    while((entry = readdir(dir)) != NULL) {
-        if(entry->d_type == DT_REG) {
-            std::string name = entry->d_name;
-            if(name.substr(name.size() - 2, name.size() - 1) == ".h") {
-                headers.push_back(name);
-            }
-        }
-    }
-
+    charset = new cs::charset;
+    cs::setStandardChars(charset);
     // Sends generation tasks off to other threads
-    for(auto f = headers.begin(); f != headers.end(); ++f) {
-        threads.emplace_back(std::thread (&UMLifier::umlifyOne, this, *f));
+    int i = 0;
+    for(auto f = objects.begin(); f != objects.end(); ++f) {
+        threads.emplace_back(std::thread (&UMLifier::umlifyOne, this, *f, charset, i));
     }
     // Waits for all threads to finish
     for(auto& th : threads) {
@@ -235,9 +225,118 @@ void UMLifier::umlify() {
 UMLifies individual files
 */
 // TODO
-void UMLifier::umlifyOne(std::string fileName) {
-    std::ifstream file(path + fileName);
+void UMLifier::umlifyOne(Object *obj, cs::charset *charset, int i) {
+    std::ifstream inFile(path + obj->getFileName());
+    std::ofstream outFile(path + "temp" + std::to_string(i));
 
-    struct cs::charset charset;
-    cs::setStandardChars(charset);
+    std::string line;
+    bool status = false;
+
+    while(getline(inFile, line)) {
+        if(status) {
+            if(line.compare("};") == 0) {
+                // I've already put one foot in the hole with this damn project, might as well use a goto for funsies.
+                // In my defense this goto is effectively a function, but the scope of umlifyOne is preserved for it.
+                // If you think gotos are inheritently evil, I strongly advise reading Dijkstra's paper against gotos, where he does actually defend some uses.
+                // It's worth noting that the originally egregious uses of gotos have been phased out of modern programming, and
+                // much of the debate resembles the current OO vs functional paradigm war
+                goto filewrite;
+            }
+            else {
+                // Deletes all of the actual class content
+                line.replace(0, line.length() - 1, "");
+            }
+        }
+        else {
+            if(line.substr(0, 6).compare("class ") == 0) {
+                status = true;
+                line.replace(0,line.length() - 1, "");
+            }
+        }
+        outFile << line << std::endl;
+        loopReturn: ;
+    }
+
+
+    return;
+
+    // Something about bad practice here
+    // TODO: Figure out how I'm connecting UMLs
+    // TODO: Figure out how I'm doing object dependencies
+    if(false) {
+        filewrite: ;
+        // TODO: write includes for lines
+        outFile << "#define " << charset->pub << " public:" << std::endl;
+        outFile << "#define " << charset->priv << " private:" << std::endl;
+        outFile << "#define " << charset->prot << " protected:" << std::endl;
+        outFile << "#define " << charset->boxLine << std::endl;
+        outFile << "#define " << charset->boxEnd << " };" << std::endl;
+        outFile << "#define " << charset->semicolon << " ;" << std::endl;
+        outFile << "#define " << charset->clas << " class" << std::endl;
+        if(!obj->getParent().empty()) {
+            outFile << "#define " << charset->classStart << ": public " << obj->getParent() << " {" << std::endl;
+        }
+        else {
+            outFile << "#define " << charset->classStart << " {" << std::endl;
+        }
+
+        outFile << "\n" << std::endl;
+
+        // Write out the UMLs
+        outFile << charset->boxLine << std::endl;
+        outFile << charset->clas << " " << obj->getClassName();
+        for(int i = 0; i < (57 - obj->getClassName().length() - 2); i++) {
+            outFile << " ";
+        }
+        outFile << charset->classStart << std::endl;
+        outFile << charset->boxLine << std::endl;
+
+        // Adds all of the functions
+        for(auto iter = obj->getFunctions().begin(); iter != obj->getFunctions().end(); ++iter) {
+            std::string acc = iter->substr(0, 1);
+            if(acc.compare("+") == 0) {
+                outFile << charset->pub;
+            }
+            else if(acc.compare("-") == 0) {
+                outFile << charset->priv;
+            }
+            else {
+                outFile << charset->prot;
+            }
+
+            outFile << " " << iter->substr(1, iter->length() - 2);
+            for(int i = 0; i < (56 - obj->getClassName().length() - 2); i++) {
+                outFile << " ";
+            }
+            outFile << charset->semicolon << std::endl;
+        }
+        
+        outFile << charset->boxLine << std::endl;
+
+        // Adds all of the values
+        for(auto iter = obj->getValues().begin(); iter != obj->getValues().end(); ++iter) {
+            std::string acc = iter->substr(0, 1);
+            if(acc.compare("+") == 0) {
+                outFile << charset->pub;
+            }
+            else if(acc.compare("-") == 0) {
+                outFile << charset->priv;
+            }
+            else {
+                outFile << charset->prot;
+            }
+
+            outFile << " " << iter->substr(1, iter->length() - 2);
+            for(int i = 0; i < (56 - obj->getClassName().length() - 2); i++) {
+                outFile << " ";
+            }
+            outFile << charset->semicolon << std::endl;
+        }
+
+        outFile << charset->boxEnd << std::endl;
+
+        // TODO: Draw other boxes and draw lines
+
+        goto loopReturn;
+    }
 }

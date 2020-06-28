@@ -34,7 +34,7 @@ class UMLifier {
     private:
         bool loaded;
         void generateOne(std::string);
-        void umlifyOne(std::string);
+        void umlifyOne(Object *, cs::charset *, int);
         std::string path;
         std::vector<Object *> objects;
 };
